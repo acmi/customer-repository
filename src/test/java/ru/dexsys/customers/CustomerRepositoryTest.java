@@ -2,8 +2,15 @@ package ru.dexsys.customers;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import javax.sql.DataSource;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -15,7 +22,10 @@ public class CustomerRepositoryTest {
 
     @BeforeEach
     public void init() {
-        DataSource dataSource = null; //TODO
+        String url = "jdbc:h2:mem:test";
+        String user = "sa";
+        String password = "";
+        DataSource dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource(url, user, password);
 
         customerRepository = new SpringCustomerRepository(dataSource);
         customerContactRepository = new SpringCustomerContactRepository(dataSource);
