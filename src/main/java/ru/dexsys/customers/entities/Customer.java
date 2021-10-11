@@ -1,4 +1,4 @@
-package ru.dexsys.customers;
+package ru.dexsys.customers.entities;
 
 import java.util.ArrayList;
 import java.util.List;

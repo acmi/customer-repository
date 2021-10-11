@@ -1,4 +1,4 @@
-package ru.dexsys.customers;
+package ru.dexsys.customers.entities;
 
 public class CustomerContact {
     private String id;

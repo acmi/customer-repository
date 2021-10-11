@@ -1,0 +1,64 @@
+package ru.dexsys.customers.repositoriesIMPL;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import ru.dexsys.customers.entities.Customer;
+import ru.dexsys.customers.entities.CustomerContact;
+import ru.dexsys.customers.extractors.CustomerExtractor;
+import ru.dexsys.customers.repositoriesAPI.CustomerRepository;
+
+import javax.sql.DataSource;
+import java.sql.PreparedStatement;
+import java.util.List;
+import java.util.Optional;
+
+public class SpringCustomerRepository implements CustomerRepository {
+
+    private JdbcTemplate jdbcTemplate;
+
+    public SpringCustomerRepository(DataSource dataSource) {
+        jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
+    @Override
+    public Optional<Customer> findById(String id) {
+        String findCustomerByIdQuery = "SELECT customer.id AS customer_id, customer.name, " +
+                "customer_contact.id AS contact_id, customer_contact.contact, customer_contact.type " +
+                "FROM customer " +
+                "LEFT OUTER JOIN customer_contact ON customer.id = customer_contact.customer_id " +
+                "WHERE customer.id = ?";
+        List<Customer> customers = jdbcTemplate.query(findCustomerByIdQuery, new CustomerExtractor(), id);
+        if (customers != null && customers.size() == 1) {
+            return Optional.of(customers.get(0));
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public List<Customer> findAll() {
+        throw new UnsupportedOperationException("NOT IMPLEMENTED"); //TODO
+    }
+
+    @Override
+    public Customer save(Customer entity) {
+        String saveCustomerQuery = "INSERT INTO customer (id, name) VALUES (?, ?)";
+        String saveCustomerContractQuery = "INSERT INTO customer_contact (id, contact, type, customer_id) VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(saveCustomerQuery, entity.getId(), entity.getName());
+        if (entity.getContacts() != null && !entity.getContacts().isEmpty()) {
+            for (CustomerContact contact : entity.getContacts()) {
+                jdbcTemplate.update(saveCustomerContractQuery, contact.getId(), contact.getContact(), contact.getType().toString(), entity.getId());
+            }
+        }
+        return entity;
+    }
+
+    @Override
+    public void update(Customer entity) {
+        throw new UnsupportedOperationException("NOT IMPLEMENTED"); //TODO
+    }
+
+    @Override
+    public void deleteById(String id) {
+        throw new UnsupportedOperationException("NOT IMPLEMENTED"); //TODO
+    }
+}

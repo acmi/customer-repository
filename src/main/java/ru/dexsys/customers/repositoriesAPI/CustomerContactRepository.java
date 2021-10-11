@@ -1,25 +1,27 @@
-package ru.dexsys.customers;
+package ru.dexsys.customers.repositoriesAPI;
+
+import ru.dexsys.customers.entities.CustomerContact;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface CustomerRepository {
+public interface CustomerContactRepository {
     /**
      * вернуть объект по Id
      */
-    Optional<Customer> findById(String id);
+    Optional<CustomerContact> findById(String id);
     /**
      * вернуть все объекты
      */
-    List<Customer> findAll();
+    List<CustomerContact> findAll();
     /**
      * сохранить новый объект
      */
-    Customer save(Customer entity);
+    CustomerContact save(CustomerContact entity);
     /**
      * обновить все поля по Id
      */
-    void update(Customer entity);
+    void update(CustomerContact entity);
     /**
      * удалить запить по Id
      */

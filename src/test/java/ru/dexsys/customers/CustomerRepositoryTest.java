@@ -2,6 +2,15 @@ package ru.dexsys.customers;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import ru.dexsys.customers.entities.Customer;
+import ru.dexsys.customers.entities.CustomerContact;
+import ru.dexsys.customers.repositoriesAPI.CustomerContactRepository;
+import ru.dexsys.customers.repositoriesAPI.CustomerRepository;
+import ru.dexsys.customers.repositoriesIMPL.SpringCustomerContactRepository;
+import ru.dexsys.customers.repositoriesIMPL.SpringCustomerRepository;
 
 import javax.sql.DataSource;
 
@@ -15,7 +24,13 @@ public class CustomerRepositoryTest {
 
     @BeforeEach
     public void init() {
-        DataSource dataSource = null; //TODO
+        DataSource dataSource = new EmbeddedDatabaseBuilder()
+                .setName("users")
+                .generateUniqueName(true)
+                .setType(EmbeddedDatabaseType.H2)
+                .setScriptEncoding("UTF-8")
+                .addScript("schema.sql")
+                .build();
 
         customerRepository = new SpringCustomerRepository(dataSource);
         customerContactRepository = new SpringCustomerContactRepository(dataSource);

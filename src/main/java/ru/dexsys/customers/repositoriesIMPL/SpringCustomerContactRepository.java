@@ -1,30 +1,34 @@
-package ru.dexsys.customers;
+package ru.dexsys.customers.repositoriesIMPL;
+
+import ru.dexsys.customers.entities.CustomerContact;
+import ru.dexsys.customers.repositoriesAPI.CustomerContactRepository;
 
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
-public class SpringCustomerRepository implements CustomerRepository {
-    public SpringCustomerRepository(DataSource dataSource) {
+public class SpringCustomerContactRepository implements CustomerContactRepository {
+    public SpringCustomerContactRepository(DataSource dataSource) {
     }
 
     @Override
-    public Optional<Customer> findById(String id) {
+    public Optional<CustomerContact> findById(String id) {
+
         throw new UnsupportedOperationException("NOT IMPLEMENTED"); //TODO
     }
 
     @Override
-    public List<Customer> findAll() {
+    public List<CustomerContact> findAll() {
         throw new UnsupportedOperationException("NOT IMPLEMENTED"); //TODO
     }
 
     @Override
-    public Customer save(Customer entity) {
+    public CustomerContact save(CustomerContact entity) {
         throw new UnsupportedOperationException("NOT IMPLEMENTED"); //TODO
     }
 
     @Override
-    public void update(Customer entity) {
+    public void update(CustomerContact entity) {
         throw new UnsupportedOperationException("NOT IMPLEMENTED"); //TODO
     }
 
