@@ -2,6 +2,7 @@ package ru.dexsys.customers.repositoriesIMPL;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import ru.dexsys.customers.entities.CustomerContact;
+import ru.dexsys.customers.extractors.CustomerContactExtractor;
 import ru.dexsys.customers.repositoriesAPI.CustomerContactRepository;
 import ru.dexsys.customers.repositoriesAPI.CustomerRepository;
 
@@ -21,12 +22,25 @@ public class SpringCustomerContactRepository implements CustomerContactRepositor
 
     @Override
     public Optional<CustomerContact> findById(String id) {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED"); //TODO
+        String queryFindByIdCustomerContact = "SELECT customer_contact.id AS contact_id, customer_contact.contact, " +
+                "customer_contact.type, customer_contact.customer_id, customer.name " +
+                "FROM customer_contact " +
+                "LEFT OUTER JOIN customer ON customer_contact.customer_id = customer.id " +
+                "WHERE customer_contact.id = ?";
+        List<CustomerContact> contacts = jdbcTemplate.query(queryFindByIdCustomerContact, new CustomerContactExtractor(), id);
+        if (contacts != null && contacts.size() == 1) {
+            return Optional.of(contacts.get(0));
+        }
+        return Optional.empty();
     }
 
     @Override
     public List<CustomerContact> findAll() {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED"); //TODO
+        String queryFindAllCustomerContacts = "SELECT customer_contact.id AS contact_id, customer_contact.contact, " +
+                "customer_contact.type, customer_contact.customer_id, customer.name " +
+                "FROM customer_contact " +
+                "LEFT OUTER JOIN customer ON customer_contact.customer_id = customer.id";
+        return jdbcTemplate.query(queryFindAllCustomerContacts, new CustomerContactExtractor());
     }
 
     @Override

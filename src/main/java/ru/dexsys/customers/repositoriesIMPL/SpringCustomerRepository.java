@@ -1,14 +1,12 @@
 package ru.dexsys.customers.repositoriesIMPL;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import ru.dexsys.customers.entities.Customer;
 import ru.dexsys.customers.entities.CustomerContact;
 import ru.dexsys.customers.extractors.CustomerExtractor;
 import ru.dexsys.customers.repositoriesAPI.CustomerRepository;
 
 import javax.sql.DataSource;
-import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +34,11 @@ public class SpringCustomerRepository implements CustomerRepository {
 
     @Override
     public List<Customer> findAll() {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED"); //TODO
+        String queryFindAllCustomers = "SELECT customer.id AS customer_id, customer.name, " +
+                "customer_contact.id AS contact_id, customer_contact.contact, customer_contact.type " +
+                "FROM customer " +
+                "LEFT OUTER JOIN customer_contact ON customer.id = customer_contact.customer_id";
+        return jdbcTemplate.query(queryFindAllCustomers, new CustomerExtractor());
     }
 
     @Override
