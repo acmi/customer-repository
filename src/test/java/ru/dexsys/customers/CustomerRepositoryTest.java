@@ -56,7 +56,6 @@ public class CustomerRepositoryTest {
 
         customerRepository.save(customer);
 
-
         var savedCustomer = customerRepository.findById("customer_id");
         assertTrue(savedCustomer.isPresent());
         assertEquals("John Mathew", savedCustomer.get().getName());

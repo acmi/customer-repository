@@ -41,12 +41,12 @@ public class SpringCustomerRepository implements CustomerRepository {
 
     @Override
     public Customer save(Customer entity) {
-        String saveCustomerQuery = "INSERT INTO customer (id, name) VALUES (?, ?)";
-        String saveCustomerContractQuery = "INSERT INTO customer_contact (id, contact, type, customer_id) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(saveCustomerQuery, entity.getId(), entity.getName());
+        String querySaveCustomer = "INSERT INTO customer (id, name) VALUES (?, ?)";
+        String querySaveCustomerContact = "INSERT INTO customer_contact (id, contact, type, customer_id) VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(querySaveCustomer, entity.getId(), entity.getName());
         if (entity.getContacts() != null && !entity.getContacts().isEmpty()) {
             for (CustomerContact contact : entity.getContacts()) {
-                jdbcTemplate.update(saveCustomerContractQuery, contact.getId(), contact.getContact(), contact.getType().toString(), entity.getId());
+                jdbcTemplate.update(querySaveCustomerContact, contact.getId(), contact.getContact(), contact.getType().toString(), entity.getId());
             }
         }
         return entity;
@@ -54,11 +54,13 @@ public class SpringCustomerRepository implements CustomerRepository {
 
     @Override
     public void update(Customer entity) {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED"); //TODO
+        String updateCustomerQuery = "UPDATE customer SET name = ? WHERE id = ?";
+        jdbcTemplate.update(updateCustomerQuery, entity.getName(), entity.getId());
     }
 
     @Override
     public void deleteById(String id) {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED"); //TODO
+        String deleteByIdCustomerQuery = "DELETE FROM customer WHERE id = ?";
+        jdbcTemplate.update(deleteByIdCustomerQuery, id);
     }
 }
