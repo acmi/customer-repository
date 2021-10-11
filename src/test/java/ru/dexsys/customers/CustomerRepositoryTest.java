@@ -1,32 +1,21 @@
 package ru.dexsys.customers;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import javax.sql.DataSource;
+import javax.persistence.EntityManager;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
+@DataJpaTest
 public class CustomerRepositoryTest {
-
+    @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
     private CustomerContactRepository customerContactRepository;
-
-    @BeforeEach
-    public void init() {
-        DataSource dataSource = new EmbeddedDatabaseBuilder()
-                .setType(EmbeddedDatabaseType.H2)
-                .generateUniqueName(true)
-                .setScriptEncoding("UTF-8")
-                .addScript("schema.sql")
-                .build();
-
-        customerRepository = new SpringCustomerRepository(dataSource);
-        customerContactRepository = new SpringCustomerContactRepository(dataSource, customerRepository);
-    }
+    @Autowired
+    private EntityManager entityManager;
 
     @Test
     public void testCustomerSaved() {
@@ -47,6 +36,9 @@ public class CustomerRepositoryTest {
         customer.addContact(mobile);
 
         customerRepository.save(customer);
+        entityManager.flush();
+
+        entityManager.clear();
 
 
         var savedCustomer = customerRepository.findById("customer_id");
@@ -72,8 +64,12 @@ public class CustomerRepositoryTest {
         customer.addContact(mobile);
 
         customerRepository.save(customer);
+        entityManager.flush();
+
+        entityManager.clear();
 
         customerContactRepository.deleteById("customer_contact_mobile");
+        entityManager.flush();
 
         var savedCustomer = customerRepository.findById("customer_id");
         assertTrue(savedCustomer.isPresent());

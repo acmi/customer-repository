@@ -1,9 +1,11 @@
 package ru.dexsys.customers;
 
+import org.springframework.data.repository.Repository;
+
 import java.util.List;
 import java.util.Optional;
 
-public interface CustomerRepository {
+public interface CustomerRepository extends Repository<Customer, String> {
     /**
      * вернуть объект по Id
      */
@@ -19,7 +21,9 @@ public interface CustomerRepository {
     /**
      * обновить все поля по Id
      */
-    void update(Customer entity);
+    default void update(Customer entity) {
+        save(entity);
+    }
     /**
      * удалить запить по Id
      */

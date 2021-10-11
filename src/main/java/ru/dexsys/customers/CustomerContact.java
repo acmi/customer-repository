@@ -1,9 +1,19 @@
 package ru.dexsys.customers;
 
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class CustomerContact {
+    @Id
     private String id;
+    @Enumerated(EnumType.STRING)
     private Type type;
     private String contact;
+    @ManyToOne
     private Customer customer;
 
     public CustomerContact() {
