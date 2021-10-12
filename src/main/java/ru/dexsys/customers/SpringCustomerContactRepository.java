@@ -1,35 +1,46 @@
 package ru.dexsys.customers;
 
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.*;
+
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
 public class SpringCustomerContactRepository implements CustomerContactRepository {
-    public SpringCustomerContactRepository(DataSource dataSource) {
-    }
+  private final NamedParameterJdbcOperations jdbc;
 
-    @Override
-    public Optional<CustomerContact> findById(String id) {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED"); //TODO
-    }
+  public SpringCustomerContactRepository(DataSource dataSource) {
+    this.jdbc = new NamedParameterJdbcTemplate(dataSource);
+  }
 
-    @Override
-    public List<CustomerContact> findAll() {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED"); //TODO
-    }
+  @Override
+  public Optional<CustomerContact> findById(String id) {
+    return jdbc.query("select customer_contact.id AS contact_id, customer_contact.contact, " +
+        "customer_contact.type, customer_contact.customer_id, customer.name " +
+        "from customer_contact " +
+        "LEFT OUTER JOIN CUSTOMER ON customer_contact.customer_id = customer.id " +
+        "where customer_contact.id = :id", new MapSqlParameterSource("id", id), new CustomerContactResultSet()).stream().findAny();
+  }
 
-    @Override
-    public CustomerContact save(CustomerContact entity) {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED"); //TODO
-    }
+  @Override
+  public List<CustomerContact> findAll() {
+    return jdbc.query("select id, name from CUSTOMER", new CustomerContactResultSet());
+  }
 
-    @Override
-    public void update(CustomerContact entity) {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED"); //TODO
-    }
+  @Override
+  public CustomerContact save(CustomerContact entity) {
+    jdbc.update("INSERT INTO customer_contact (id, contact, type, customer_id) VALUES (:id, :contact, :type, :customer_id)", new BeanPropertySqlParameterSource(entity));
+    return entity;
+  }
 
-    @Override
-    public void deleteById(String id) {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED"); //TODO
-    }
+  @Override
+  public void update(CustomerContact entity) {
+    jdbc.update("update customer_contact set contact = :contact, type = :type where id = :id", new BeanPropertySqlParameterSource(entity));
+  }
+
+  @Override
+  public void deleteById(String id) {
+    jdbc.update("delete from customer_contact where id = :id", new MapSqlParameterSource("id", id));
+  }
 }
