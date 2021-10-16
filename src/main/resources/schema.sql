@@ -13,6 +13,6 @@ create table CUSTOMER_CONTACT
     TYPE        VARCHAR(255),
     CUSTOMER_ID VARCHAR(255),
     constraint FK_C_ID
-        foreign key (CUSTOMER_ID) references CUSTOMER (ID)
+        foreign key (CUSTOMER_ID) references CUSTOMER (ID) on delete cascade
 );
 

@@ -6,6 +6,16 @@ public class CustomerContact {
     private String contact;
     private Customer customer;
 
+    public CustomerContact() {
+    }
+
+    public CustomerContact(String id, Type type, String contact, Customer customer) {
+        this.id = id;
+        this.type = type;
+        this.contact = contact;
+        this.customer = customer;
+    }
+
     public String getId() {
         return id;
     }

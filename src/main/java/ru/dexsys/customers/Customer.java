@@ -25,6 +25,9 @@ public class Customer {
     }
 
     public List<CustomerContact> getContacts() {
+        if (contacts == null) {
+            contacts = new ArrayList<>();
+        }
         return contacts;
     }
 
