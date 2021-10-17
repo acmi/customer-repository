@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerResultSet implements ResultSetExtractor<List<Customer>> {
+public class CustomerResultSetExtractor implements ResultSetExtractor<List<Customer>> {
     @Override
     public List<Customer> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
         List<Customer> users = new ArrayList<>();

@@ -27,12 +27,12 @@ public class SpringCustomerRepository implements CustomerRepository {
                         "left outer join customer_contact on customer.id = customer_contact.customer_id " +
                         "where customer.id = :id",
                 new MapSqlParameterSource("id", id),
-                new CustomerResultSet()).stream().findAny();
+                new CustomerResultSetExtractor()).stream().findAny();
     }
 
     @Override
     public List<Customer> findAll() {
-        return jdbc.query("select id, name from customer", new CustomerResultSet());
+        return jdbc.query("select id, name from customer", new CustomerResultSetExtractor());
     }
 
     @Override
