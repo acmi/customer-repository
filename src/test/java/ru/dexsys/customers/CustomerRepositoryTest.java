@@ -2,20 +2,30 @@ package ru.dexsys.customers;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
-import javax.sql.DataSource;
+
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 public class CustomerRepositoryTest {
 
     private CustomerRepository customerRepository;
     private CustomerContactRepository customerContactRepository;
 
     @BeforeEach
-    public void init() {
-        DataSource dataSource = null; //TODO
+    public void init() throws SQLException {
+        var dataSource = new EmbeddedDatabaseBuilder()
+                .generateUniqueName(true)
+                .setType(EmbeddedDatabaseType.H2)
+                .setScriptEncoding("UTF-8")
+                .addScripts("schema.sql")
+                .build();
+        String url = "jdbc:h2:mem:test";
+        String user = "sa";
+        String password = "";
 
         customerRepository = new SpringCustomerRepository(dataSource);
         customerContactRepository = new SpringCustomerContactRepository(dataSource);
